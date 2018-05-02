@@ -1,0 +1,48 @@
+<header>
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#myNavbar" aria-controls="myNavbar" aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="https://cocomonkeyblog.files.wordpress.com/" id="logo"> <img src="https://cocomonkeyblog.files.wordpress.com/2017/07/cropped-krzywe-2-monkey1.png?w=1024&h=228" alt="CocoMonkey logo" style="width:303px;height:68px;border:0" class="img-fluid"></a>
+
+
+    <div class="collapse navbar-collapse" id="myNavbar">
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item nav-link"><%= link_to "O SZKOLE", "https://cocomonkeyblog.wordpress.com/about/" %></li>
+          <li class="nav-item nav-link"><%= link_to "CENNIK", "https://cocomonkeyblog.wordpress.com/cennik/" %></li>
+          <li class="nav-item nav-link"><%= link_to "KONTAKT", "https://cocomonkeyblog.wordpress.com/contact/" %></li>
+          <li class="nav-item nav-link"><%= link_to "BLOG", "https://cocomonkeyblog.wordpress.com/blog/" %></li>
+
+          <% if logged_in? %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              Moje konto
+            </a>
+            <div class="dropdown-menu">
+              <a><%= link_to "Profile", current_user, class: 'dropdown-item' %></a>
+              <a><%= link_to "Settings", edit_user_path(current_user), class: 'dropdown-item' %></a>
+              <a> <%= link_to "Users", users_path, class: 'dropdown-item' %></a>
+              <a class="dropdown-divider"></a>
+              <a><%= link_to "Log out", logout_path, method: :delete, class: 'dropdown-item' %></a>
+            </div>
+          </li>
+
+
+          <% else %>
+            <li class="nav-item nav-link"><%= link_to "Zaloguj się", login_path %></li>
+          <% end %>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+              ĆWICZENIA
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="/">Angielski</a>
+              <a class="dropdown-item" href="https://coco-monkey.herokuapp.com/">Matematyka</a>
+            </div>
+          </li>
+    </div>
+
+  </nav>
+</header>
