@@ -1,5 +1,8 @@
 class User < ApplicationRecord
-  before_save { email.downcase! }
+  attr_accessor :remember_token, :activation_token
+  before_save   :downcase_email
+  before_create :create_activation_digest
+
   validates :name, presence: true, length: { maximum: 50 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true, length: { maximum: 50 },
@@ -7,6 +10,15 @@ class User < ApplicationRecord
                       uniqueness: { case_sensitive: false }
   has_secure_password
   validates :password, length: { minimum: 6 }
+
+  def activate
+   update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
 
    def self.digest(string) # hashuje stringa
       cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
@@ -24,17 +36,28 @@ class User < ApplicationRecord
   end
 
   # Returns true if the given token matches the digest.
- def authenticated?(remember_token)
-   return false if remember_digest.nil? # ta linijka powoduje, ze po wylogowaniu na innym urzadzeniu (co likwiduje
-   #  remember digesta z bazy) przestana byc aktywne cookiesy na innych urzadzeniach (i nie pojawi sie blad zwiazany z tym,
-   # ze remeber digest wynosi nil w bazie). Po tym returnie nie jest analizowana dalsza czesc metody
-
-   BCrypt::Password.new(remember_digest).is_password?(remember_token)
- end
+  def authenticated?(attribute, token)
+   digest = self.send("#{attribute}_digest") # to jest w zasadzie to samo co user.activation_digest tylko ze
+   #  wprowadzamy metaprogramowanie aby mozna bylo uzyc attribute do wywolania metody remember_digest oraz activation_digest
+   return false if digest.nil?
+   BCrypt::Password.new(digest).is_password?(token)
+  end
 
  # Forgets a user. Likwiduje remember digest z bazy, czyli wymagane jest stworzenie nowego, bo starym cookie sie nie zaloguje juz
  def forget
    update_attribute(:remember_digest, nil)
  end
+
+   private
+     # Converts email to all lower-case.
+     def downcase_email
+       self.email = email.downcase
+     end
+
+     # Creates and assigns the activation token and digest.
+     def create_activation_digest
+       self.activation_token  = User.new_token
+       self.activation_digest = User.digest(activation_token)
+     end
 
 end

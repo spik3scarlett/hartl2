@@ -200,7 +200,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   jbuilder (~> 2.5)
   jquery-rails
-  pg (= 0.18.4)
+  pg (~> 0.18.4)
   popper_js (~> 1.11, >= 1.11.1)
   puma (~> 3.7)
   rails (~> 5.1.5)

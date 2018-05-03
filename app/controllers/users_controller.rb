@@ -26,9 +26,9 @@ class UsersController < ApplicationController
  def create
     @user = User.new(user_params)
     if @user.save
-      log_in @user
-      flash[:success] = "Rejestracja zakończona sukcesem!"
-      redirect_to @user # to jest to samo co > redirect_to user_url(@user) < This is because Rails automatically infers from redirect_to @user that we want to redirect to user_url(@user).
+      @user.send_activation_email
+      flash[:info] = "Please check your email to activate your account."
+      redirect_to root_url
     else
       render 'new'
     end
