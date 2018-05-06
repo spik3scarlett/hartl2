@@ -5,6 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
+
 gem 'will_paginate',           '3.1.6'
 gem 'will_paginate-bootstrap4', '~> 0.2.2'
 gem 'bcrypt', git: 'https://github.com/codahale/bcrypt-ruby.git', :require => 'bcrypt'
@@ -56,6 +57,7 @@ end
 
 group :production do
   gem 'pg', '~> 0.18.4'
+
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
